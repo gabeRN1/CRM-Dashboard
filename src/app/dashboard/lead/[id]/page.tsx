@@ -16,21 +16,19 @@ import { Button } from "@/components/ui/button";
 export default async function LeadDetailPage({ params }: { params: { id: string } }) {
   const supabase = await createClient();
 
-  // Busca os dados do lead específico
-  const { data: lead, error: leadError } = await supabase
+   const { data: lead, error: _leadError } = await supabase
     .from("leads")
     .select("*")
     .eq("id", params.id)
-    .single(); // .single() garante que esperamos apenas um resultado
+    .single();
 
-  // Busca o histórico de interações para este lead
-  const { data: interactions, error: interactionsError } = await supabase
+  // CORREÇÃO: Adicionado '_' para variáveis não utilizadas
+  const { data: interactions, error: _interactionsError } = await supabase
     .from("interactions")
     .select("*")
     .eq("lead_id", params.id)
     .order("created_at", { ascending: false });
 
-  // Se o lead não for encontrado, redireciona para o dashboard
   if (!lead) {
     return redirect("/dashboard");
   }

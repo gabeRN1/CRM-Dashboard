@@ -1,13 +1,10 @@
+// lib/supabase/server.ts
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 
-// MUDANÇA 1: A função agora é 'async' para permitir o uso de 'await'
 export async function createClient() {
-  // Pega o armazém de cookies da requisição atual
-  // MUDANÇA 2: Usamos 'await' para esperar a Promise dos cookies resolver
   const cookieStore = await cookies();
 
-  // O resto do código permanece o mesmo
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -19,14 +16,14 @@ export async function createClient() {
         set(name: string, value: string, options) {
           try {
             cookieStore.set({ name, value, ...options });
-          } catch (error) {
+          } catch { // CORREÇÃO: Parâmetro 'error' removido
             // Acontece em Server Actions, pode ser ignorado
           }
         },
         remove(name: string, options) {
           try {
             cookieStore.set({ name, value: '', ...options });
-          } catch (error) {
+          } catch { // CORREÇÃO: Parâmetro 'error' removido
             // Acontece em Server Actions, pode ser ignorado
           }
         },
